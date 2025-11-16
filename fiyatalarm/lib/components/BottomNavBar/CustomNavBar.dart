@@ -8,20 +8,14 @@ class CustomBottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
     return Container(
       margin: const EdgeInsets.all(8),
       padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 10),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: scheme.surface,
         borderRadius: const BorderRadius.all( Radius.circular(24)),
         border: Border.all(color: Colors.grey.shade300, width: 1),
-        // boxShadow: [
-        //   BoxShadow(
-        //     color: Colors.black12,
-        //     blurRadius: 2,
-        //     offset: const Offset(0, -3),
-        //   ),
-        // ],
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -38,7 +32,7 @@ class CustomBottomNav extends StatelessWidget {
             child: Icon(
                 icons[index],
                 size: isSelected ? 28 : 24,
-                color: isSelected ? const Color.fromARGB(255, 16, 47, 182) : Colors.grey,
+                color: isSelected ?  scheme.inversePrimary: Colors.grey,
               ),
              ),
           );

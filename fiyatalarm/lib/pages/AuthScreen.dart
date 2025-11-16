@@ -9,8 +9,7 @@ class AuthScreen extends StatefulWidget {
   State<AuthScreen> createState() => _AuthPageState();
 }
 
-class _AuthPageState extends State<AuthScreen>
-    with SingleTickerProviderStateMixin {
+class _AuthPageState extends State<AuthScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -27,6 +26,9 @@ class _AuthPageState extends State<AuthScreen>
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final textScheme = Theme.of(context).textTheme;
+
     return Scaffold(
       body: Center(
         child: SingleChildScrollView(
@@ -34,19 +36,15 @@ class _AuthPageState extends State<AuthScreen>
           child: Column(
             children: [
               SizedBox(height: 50),
-              Image.asset(
-                'assets/logo/alarmlogo.png',
-                width: 150,
-                fit: BoxFit.cover,
-              ),
+              Image.asset('assets/logo/denme.png' ,fit: BoxFit.contain,),
               SizedBox(height: 20),
 
               TabBar(
                 controller: _tabController,
-                indicatorColor: Colors.blue,
-                labelColor: Colors.blue,
-                unselectedLabelColor: Colors.black54,
-                tabs: [
+                indicatorColor: scheme.primary,
+                labelColor: scheme.primary,
+                unselectedLabelColor: textScheme.bodyMedium!.color,
+                tabs: const [
                   Tab(text: "Giriş Yap"),
                   Tab(text: "Kayıt Ol"),
                 ],

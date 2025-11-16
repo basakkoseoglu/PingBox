@@ -1,4 +1,5 @@
 import 'package:fiyatalarm/pages/MainScreen.dart';
+import 'package:fiyatalarm/theme/AppColors.dart';
 import 'package:flutter/material.dart';
 import '../../services/AuthService.dart';
 
@@ -18,6 +19,8 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+
     return Padding(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -25,30 +28,47 @@ class _LoginFormState extends State<LoginForm> {
           TextField(
             controller: loginEmailController,
             decoration: InputDecoration(
+              labelText: "E-mail",
+              prefixIcon: Icon(Icons.person, color: scheme.primary),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
-              labelText: "E-mail",
-              prefixIcon: Icon(Icons.person),
+              enabledBorder: OutlineInputBorder(
+               borderSide: BorderSide( color: Theme.of(context).brightness == Brightness.light
+            ? AppColors.borderLight
+            : AppColors.borderDark,),
+              borderRadius: BorderRadius.circular(12),
+            ),
             ),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           TextField(
             controller: loginPasswordController,
             obscureText: isObscure,
             decoration: InputDecoration(
+              labelText: "Şifre",
+              prefixIcon: Icon( Icons.lock, color: scheme.primary),
+              suffixIcon: IconButton(
+                onPressed: () {
+                  setState(() => isObscure = !isObscure);
+                },
+                icon: Icon(
+                  isObscure ? Icons.visibility_off : Icons.visibility,
+                  color: scheme.onPrimary,
+                ),
+              ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
-              labelText: "Şifre",
-              prefixIcon: Icon(Icons.lock),
-              suffixIcon: IconButton(
-                onPressed: () => setState(() => isObscure = !isObscure),
-                icon: Icon(isObscure ? Icons.visibility_off : Icons.visibility),
-              ),
+              enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide( color: Theme.of(context).brightness == Brightness.light
+            ? AppColors.borderLight
+            : AppColors.borderDark,),
+              borderRadius: BorderRadius.circular(12),
+            ),
             ),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           ElevatedButton(
             onPressed: () async {
               final user = await authService.signIn(
@@ -56,20 +76,20 @@ class _LoginFormState extends State<LoginForm> {
                 loginPasswordController.text.trim(),
               );
               if (user != null) {
-                print("Giriş Başarılı");
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => const MainScreen()),
                 );
               }
             },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: scheme.primary,
+              foregroundColor: scheme.surface,
+              minimumSize: const Size(double.infinity, 50),
+            ),
             child: const Text(
               "Giriş Yap",
-              style: TextStyle(fontSize: 18,color: Colors.white),
-            ),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue,
-              minimumSize: Size(double.infinity, 50),
+              style: TextStyle(fontSize: 18),
             ),
           ),
         ],

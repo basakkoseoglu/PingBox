@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../components/BottomNavBar/CustomNavBar.dart';
-import 'HomeScreen.dart';
+import 'UpcomingMessagesScreen.dart';
 import 'NotificationScreen.dart';
 import 'ProfileScreen.dart';
-import 'SendMessageScreen.dart';
+import 'MessageComposeScreen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -18,9 +18,9 @@ class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
 
   final List<Widget> _pages = [
-    const HomeScreen(),
-    const SendMessageScreen(),
-    const NotificationScreen(),
+    const UpComingMessagesScreen(),
+    const MessageComposeScreen(),
+     NotificationScreen(),
     const ProfileScreen(),
   ];
 

@@ -1,15 +1,34 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fiyatalarm/firebase_options.dart';
+import 'package:fiyatalarm/pages/SplashScreen.dart';
 import 'package:flutter/material.dart';
+
 import 'pages/AuthScreen.dart';
 import 'pages/MainScreen.dart';
+import 'theme/AppTheme.dart';
 
-void main() async {
-   WidgetsFlutterBinding.ensureInitialized();
+@pragma('vm:entry-point') 
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp(
-  options: DefaultFirebaseOptions.currentPlatform,
-);
-print("firebase bağlantısı başarılı");
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  print("Background message: ${message.messageId}");
+}
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  await FirebaseMessaging.instance.requestPermission();
+
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+  print("firebase bağlantısı başarılı");
+
   runApp(const MainApp());
 }
 
@@ -18,12 +37,12 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        scaffoldBackgroundColor: Colors.white, 
-      ),
-      home:MainScreen(),
+      theme: AppTheme.light,
+      darkTheme: AppTheme.dark,
+      themeMode: ThemeMode.system,
+      home: SplashScreen(),
     );
   }
 }

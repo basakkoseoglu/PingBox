@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
 import 'AuthScreen.dart';
 
@@ -28,11 +29,11 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(
-              'assets/logo/alarmlogo.png',
-              width: 150,
-              fit: BoxFit.cover,
+            Lottie.asset(
+              'assets/animations/Splash.json',
+              fit: BoxFit.contain,
             ),
+
             const SizedBox(height: 20),
 
             const CircularProgressIndicator(strokeWidth: 3),
