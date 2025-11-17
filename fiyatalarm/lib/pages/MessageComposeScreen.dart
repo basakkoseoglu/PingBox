@@ -1,6 +1,8 @@
 import 'package:fiyatalarm/services/MessageService.dart';
 import 'package:flutter/material.dart';
 
+import '../components/Diaologs/CustomConfirmDialog.dart';
+
 class MessageComposeScreen extends StatefulWidget {
   const MessageComposeScreen({super.key});
 
@@ -18,8 +20,7 @@ class _MessageComposeScreenState extends State<MessageComposeScreen> {
   bool isSaving = false;
 
   Future<void> saveMessage() async {
-    if (isSaving) return;
-
+    if (isSaving) return; //aynı anda iki kere tıklamayı engeller
 
     if (_contentController.text.trim().isEmpty) {
       ScaffoldMessenger.of(
@@ -52,33 +53,33 @@ class _MessageComposeScreenState extends State<MessageComposeScreen> {
         sendAt: sendAt,
       );
 
-    
-      _titleController.clear();
-      _contentController.clear();
+      setState(() {
+        _titleController.clear();
+        _contentController.clear();
+        selectedDate = null;
+        selectedTime = null;
+      });
 
-      
       if (mounted) {
-        
+        await AppDialogs.show(
+          context,
+          title: "Mesajınız Oluşturuldu!",
+          message:
+              "İstediğiniz zamanda mesajınız size ulaşmak üzere kaydedilmiştir!",
+          primaryButton: "Tamam",
+          secondaryButton: null, 
+        );
+
         Navigator.of(context).popUntil((route) => route.isFirst);
-
-
-        Future.delayed(const Duration(milliseconds: 300), () {
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text("Mesaj başarıyla kaydedildi! 🎉"),
-                backgroundColor: Colors.green,
-                duration: Duration(seconds: 2),
-              ),
-            );
-          }
-        });
       }
     } catch (e) {
-      print("Hata detayı: $e"); 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Bir hata oluştu: ${e.toString()}")),
+        await AppDialogs.show(
+          context,
+          title: "Hata",
+          message: "Bir hata oluştu: ${e.toString()}",
+          primaryButton: "Tamam",
+          secondaryButton: null,
         );
       }
     } finally {

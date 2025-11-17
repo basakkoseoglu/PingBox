@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 import '../components/BottomNavBar/CustomNavBar.dart';
 import 'UpcomingMessagesScreen.dart';
@@ -20,7 +21,7 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> _pages = [
     const UpComingMessagesScreen(),
     const MessageComposeScreen(),
-     NotificationScreen(),
+    const NotificationScreen(),
     const ProfileScreen(),
   ];
 
@@ -30,6 +31,33 @@ class _MainScreenState extends State<MainScreen> {
     FontAwesomeIcons.bell,
     FontAwesomeIcons.user,
   ];
+
+  @override
+  void initState() {
+    super.initState();
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print("Foreground Bildirim Geldi!");
+
+      String title = message.notification?.title ?? "Bildirim";
+      String body = message.notification?.body ?? "Mesajın var.";
+
+      showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: Text(title),
+          content: Text(body),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Tamam"),
+            ),
+          ],
+        ),
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

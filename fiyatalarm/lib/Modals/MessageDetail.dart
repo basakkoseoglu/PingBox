@@ -1,9 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class MessageDetailModal extends StatelessWidget {
-  final Map message;
+import '../components/Diaologs/CustomConfirmDialog.dart';
+import '../services/MessageService.dart';
 
-  const MessageDetailModal({super.key, required this.message});
+class MessageDetailModal extends StatelessWidget {
+  final DocumentSnapshot doc;
+
+  const MessageDetailModal({super.key, required this.doc});
 
   String formatDate(DateTime date) {
     return "${date.day.toString().padLeft(2, '0')}"
@@ -11,11 +15,26 @@ class MessageDetailModal extends StatelessWidget {
         ".${date.year} - ${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}";
   }
 
+  String timeAgo(DateTime createdAt) {
+    final now = DateTime.now();
+    final diff = now.difference(createdAt).inDays;
+
+    if (diff == 0) return "Bugün yazmıştın.";
+    if (diff == 1) return "Bu mesajı 1 gün önce yazmıştın.";
+    return "Bu mesajı $diff gün önce yazmıştın.";
+  }
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final DateTime msgDate = message["date"];
-    final String formattedDate = formatDate(msgDate);
+    final data = doc.data() as Map<String, dynamic>;
+    final DateTime createdAt = (data["createdAt"] as Timestamp).toDate();
+    final DateTime sendAt = (data["sendAt"] as Timestamp).toDate();
+
+    final String formattedDate = formatDate(sendAt);
+    final String timelineText = timeAgo(createdAt);
+
+    MessageService().markAsDelivered(doc.id);
 
     return Container(
       decoration: BoxDecoration(
@@ -42,7 +61,7 @@ class MessageDetailModal extends StatelessWidget {
                   ),
                 ),
               ),
-              
+
               const SizedBox(height: 24),
               Row(
                 children: [
@@ -64,20 +83,22 @@ class MessageDetailModal extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          message["title"],
-                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 18,
-                            color: colorScheme.onSurface,
-                          ),
+                          data["title"] ?? "",
+                          style: Theme.of(context).textTheme.titleLarge
+                              ?.copyWith(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 18,
+                                color: colorScheme.onSurface,
+                              ),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           formattedDate,
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            fontSize: 13,
-                            color: colorScheme.onSurface.withOpacity(0.5),
-                          ),
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(
+                                fontSize: 13,
+                                color: colorScheme.onSurface.withOpacity(0.5),
+                              ),
                         ),
                       ],
                     ),
@@ -85,7 +106,16 @@ class MessageDetailModal extends StatelessWidget {
                 ],
               ),
 
-              const SizedBox(height: 24),
+              const SizedBox(height: 20),
+              Text(
+                timelineText,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: colorScheme.onSurface.withOpacity(0.6),
+                ),
+              ),
+
+              const SizedBox(height: 16),
 
               Container(
                 height: 1,
@@ -95,7 +125,7 @@ class MessageDetailModal extends StatelessWidget {
               const SizedBox(height: 20),
 
               Text(
-                message["content"],
+                data["content"] ?? "",
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   fontSize: 15,
                   height: 1.6,
@@ -113,7 +143,11 @@ class MessageDetailModal extends StatelessWidget {
                       label: "Sakla",
                       icon: Icons.bookmark_outline,
                       color: colorScheme.primary,
-                      onTap: () {},
+                      onTap: () async {
+                        final data = doc.data() as Map<String, dynamic>;
+                        await MessageService().saveMessage(doc.id, data);
+                        Navigator.pop(context);
+                      },
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -123,20 +157,97 @@ class MessageDetailModal extends StatelessWidget {
                       label: "Sil",
                       icon: Icons.delete_outline,
                       color: colorScheme.error,
-                      onTap: () {},
+                      onTap: () async {
+                        final confirm = await AppDialogs.show(
+                          context,
+                          title: 'Mesajı Sil',
+                          message:
+                              'Bu mesajı silmek istediğinize emin misiniz?',
+                          primaryButton: 'Sil',
+                          secondaryButton: 'Vazgeç',
+                          primaryColor: Colors.red,
+                        );
+
+                        if (confirm == true) {
+                          try {
+                            await MessageService().deleteMessage(doc.id);
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text("Mesaj silindi"),
+                                  backgroundColor: Colors.green,
+                                ),
+                              );
+                            }
+                          } catch (e) {
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text("Silme hatası: $e"),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
+                          }
+                        }
+                      },
                     ),
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 12),
-              
+
               _actionButton(
                 context: context,
                 label: "Tekrar Gönder",
                 icon: Icons.send_rounded,
                 color: colorScheme.secondary,
-                onTap: () {},
+                onTap: () async {
+                  DateTime now = DateTime.now();
+
+                  DateTime? selectedDate = await showDatePicker(
+                    context: context,
+                    initialDate: now,
+                    firstDate: now,
+                    lastDate: DateTime(2100),
+                  );
+                  if (selectedDate == null) return;
+
+                  TimeOfDay? selectedTime = await showTimePicker(
+                    context: context,
+                    initialTime: TimeOfDay.now(),
+                  );
+                  if (selectedTime == null) return;
+
+                  final newSendAt = DateTime(
+                    selectedDate.year,
+                    selectedDate.month,
+                    selectedDate.day,
+                    selectedTime.hour,
+                    selectedTime.minute,
+                  );
+
+                  final data = doc.data() as Map<String, dynamic>;
+
+                  await MessageService().resendMessage(
+                    title: data["title"] ?? "",
+                    content: data["content"] ?? "",
+                    newSendAt: newSendAt,
+                  );
+
+                  if (context.mounted) {
+                    await AppDialogs.show(
+                      context,
+                      title: "Bilgi",
+                      message: "Mesajınız tekrar gönderilmek üzere kaydedilmiştir..!",
+                      primaryButton: "Tamam",
+                      secondaryButton: null,
+                    );
+                  }
+
+                  Navigator.pop(context);
+                },
                 fullWidth: true,
               ),
 
@@ -164,20 +275,13 @@ class MessageDetailModal extends StatelessWidget {
         decoration: BoxDecoration(
           color: color.withOpacity(0.1),
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(
-            color: color.withOpacity(0.3),
-            width: 1,
-          ),
+          border: Border.all(color: color.withOpacity(0.3), width: 1),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: fullWidth ? MainAxisSize.max : MainAxisSize.min,
           children: [
-            Icon(
-              icon,
-              color: color,
-              size: 20,
-            ),
+            Icon(icon, color: color, size: 20),
             const SizedBox(width: 8),
             Text(
               label,

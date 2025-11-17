@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-
+import '../components/Diaologs/CustomConfirmDialog.dart';
 import '../services/MessageService.dart';
 
 class UpComingMessagesScreen extends StatefulWidget {
@@ -121,7 +120,7 @@ class _UpComingMessagesScreenState extends State<UpComingMessagesScreen> {
                           return const SizedBox.shrink();
                         }
 
-                        final date = (timestamp as Timestamp).toDate();
+                        final date = timestamp.toDate();
 
                         return _messageCard(
                           context: context,
@@ -229,40 +228,17 @@ class _UpComingMessagesScreenState extends State<UpComingMessagesScreen> {
                     children: [
                       _actionButton(
                         context: context,
-                        icon: Icons.edit,
-                        color: colorScheme.tertiary,
-                        onTap: () {
-                          print("Düzenleme tıklandı: $messageId");
-                        },
-                      ),
-                      const SizedBox(height: 8),
-                      _actionButton(
-                        context: context,
                         icon: Icons.delete,
                         color: colorScheme.error,
                         onTap: () async {
-                          final confirm = await showDialog<bool>(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: const Text('Mesajı Sil'),
-                              content: const Text(
-                                'Bu mesajı silmek istediğinizden emin misiniz?',
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () =>
-                                      Navigator.pop(context, false),
-                                  child: const Text('İptal'),
-                                ),
-                                TextButton(
-                                  onPressed: () => Navigator.pop(context, true),
-                                  child: const Text(
-                                    'Sil',
-                                    style: TextStyle(color: Colors.red),
-                                  ),
-                                ),
-                              ],
-                            ),
+                          final confirm = await AppDialogs.show(
+                            context,
+                            title: 'Mesajı Sil',
+                            message:
+                                'Bu mesajı silmek istediğinize emin misiniz?',
+                            primaryButton: 'Sil',
+                            secondaryButton: 'Vazgeç',
+                            primaryColor: Colors.red,
                           );
 
                           if (confirm == true) {
@@ -272,7 +248,7 @@ class _UpComingMessagesScreenState extends State<UpComingMessagesScreen> {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                     content: Text("Mesaj silindi"),
-                                    backgroundColor: Colors.orange,
+                                    backgroundColor: Colors.green,
                                   ),
                                 );
                               }

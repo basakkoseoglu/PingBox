@@ -1,4 +1,5 @@
 import 'package:fiyatalarm/pages/MainScreen.dart';
+import 'package:fiyatalarm/services/UserService.dart';
 import 'package:fiyatalarm/theme/AppColors.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -19,6 +20,7 @@ class _RegisterFormState extends State<RegisterForm> {
   final TextEditingController regPasswordController = TextEditingController();
 
   final AuthService authService = AuthService();
+  final UserService userService = UserService();
 
   @override
   Widget build(BuildContext context) {
@@ -84,12 +86,13 @@ class _RegisterFormState extends State<RegisterForm> {
           ),
           SizedBox(height: 20),
           ElevatedButton(
-            onPressed: () {
+            onPressed: () async{
              final user= authService.signUp(
                 regEmailController.text.trim(),
                 regPasswordController.text.trim(),
               );
               if (user != null) {
+                await userService.saveUserDeviceToken();
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => const MainScreen()),
