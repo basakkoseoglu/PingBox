@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fiyatalarm/pages/AuthScreen.dart';
 import 'package:flutter/material.dart';
 
@@ -8,6 +9,8 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser; 
+    final email = user?.email ?? "Email bulunamadı";
     final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(
@@ -48,7 +51,7 @@ class ProfileScreen extends StatelessWidget {
             const SizedBox(height: 16),
 
             Text(
-              "Kullanıcı Adı",
+              email,
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -76,6 +79,12 @@ class ProfileScreen extends StatelessWidget {
               context,
               icon: Icons.color_lens_outlined,
               title: "Tema",
+              onTap: () {},
+            ),
+             _settingsTile(
+              context,
+              icon: Icons.favorite_border,
+              title: "Favori Mesajlar",
               onTap: () {},
             ),
 

@@ -1,14 +1,13 @@
+import 'package:fiyatalarm/components/Diaologs/CustomConfirmDialog.dart';
 import 'package:fiyatalarm/pages/MainScreen.dart';
-import 'package:fiyatalarm/services/UserService.dart';
+import 'package:fiyatalarm/providers/UserAuthProvider.dart';
+import 'package:fiyatalarm/services/PasswordSaveService.dart';
 import 'package:fiyatalarm/theme/AppColors.dart';
 import 'package:flutter/material.dart';
-import '../../services/AuthService.dart';
-import '../../services/PasswordSaveService.dart';
-import '../Diaologs/CustomConfirmDialog.dart';
+import 'package:provider/provider.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
-
   @override
   State<LoginForm> createState() => _LoginFormState();
 }
@@ -16,8 +15,6 @@ class LoginForm extends StatefulWidget {
 class _LoginFormState extends State<LoginForm> {
   final TextEditingController loginEmailController = TextEditingController();
   final TextEditingController loginPasswordController = TextEditingController();
-  final AuthService authService = AuthService();
-  final UserService userService = UserService();
 
   bool isObscure = true;
 
@@ -36,6 +33,7 @@ class _LoginFormState extends State<LoginForm> {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+    final authProvider = context.watch<UserAuthProvider>();
 
     return Padding(
       padding: const EdgeInsets.all(20),
@@ -90,48 +88,84 @@ class _LoginFormState extends State<LoginForm> {
           ),
           const SizedBox(height: 20),
           ElevatedButton(
-            onPressed: () async {
-              final email = loginEmailController.text.trim();
-              final password = loginPasswordController.text.trim();
+            onPressed: authProvider.isLoading
+                ? null
+                : () async {
+                    final email = loginEmailController.text.trim();
+                    final password = loginPasswordController.text.trim();
 
-              final user = await authService.signIn(email, password);
+                    // 1️⃣ Validasyon kontrolü
+                    if (email.isEmpty || password.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Lütfen tüm alanları doldurun'),
+                        ),
+                      );
+                      return;
+                    }
 
-              if (user != null) {
-                await userService.saveUserDeviceToken();
-                final alreadyAccepted =
-                    await PasswordSaveService.isAcceptedBefore();
-                bool? savePass;
-                if (!alreadyAccepted) {
-                  savePass = await AppDialogs.show(
-                    context,
-                    title: 'Şifreni Kaydet',
-                    message:
-                        'Şifrenizi kaydetmek ister misiniz? Bir sonraki girişinizde otomatik doldurulacaktır.',
-                    primaryButton: 'Kaydet',
-                    secondaryButton: 'Şimdi Değil',
-                  );
-                }
-                if (savePass == true) {
-                  await PasswordSaveService.saveLoginInfo(
-                    email: email,
-                    password: password,
-                  );
-                } else {
-                  await PasswordSaveService.saveLoginInfo(email: email);
-                }
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (_) => const MainScreen()),
-                );
-              }
-            },
+                    // 2️⃣ Giriş işlemi
+                    final result = await context
+                        .read<UserAuthProvider>()
+                        .signIn(email: email, password: password);
 
+                    // 3️⃣ Giriş başarılıysa
+                    if (result.isSuccess && mounted) {
+                      // 4️⃣ Şifre kaydetme işlemleri
+
+                      final alreadyAccepted =
+                          await PasswordSaveService.isAcceptedBefore();
+                      bool? savePass;
+
+                      if (!alreadyAccepted) {
+                        savePass = await AppDialogs.show(
+                          context,
+                          title: 'Şifreni Kaydet',
+                          message:
+                              'Şifrenizi kaydetmek ister misiniz? Bir sonraki girişinizde otomatik doldurulacaktır.',
+                          primaryButton: 'Kaydet',
+                          secondaryButton: 'Şimdi Değil',
+                        );
+                      }
+
+                      // Şifre kaydet veya sadece email kaydet
+                      if (savePass == true) {
+                        await PasswordSaveService.saveLoginInfo(
+                          email: email,
+                          password: password,
+                        );
+                      } else {
+                        await PasswordSaveService.saveLoginInfo(email: email);
+                      }
+
+                      // 5️⃣ Ana ekrana yönlendir
+                      if (mounted) {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (_) => const MainScreen()),
+                        );
+                      }
+                    } else if (mounted) {
+                      // 6️⃣ Giriş başarısız olursa hata göster
+                      if (mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              result.errorMessage ?? 'Giriş başarısız',
+                            ),
+                          ),
+                        );
+                      }
+                    }
+                  },
             style: ElevatedButton.styleFrom(
               backgroundColor: scheme.primary,
               foregroundColor: scheme.surface,
               minimumSize: const Size(double.infinity, 50),
             ),
-            child: const Text("Giriş Yap", style: TextStyle(fontSize: 18)),
+            child: authProvider.isLoading
+                ? const CircularProgressIndicator(color: Colors.white)
+                : const Text("Giriş Yap", style: TextStyle(fontSize: 18)),
           ),
         ],
       ),

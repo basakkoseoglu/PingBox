@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fiyatalarm/components/Diaologs/CustomConfirmDialog.dart';
+import 'package:fiyatalarm/services/MessageService.dart';
 import 'package:flutter/material.dart';
 
-import '../components/Diaologs/CustomConfirmDialog.dart';
-import '../services/MessageService.dart';
 
 class MessageDetailModal extends StatelessWidget {
   final DocumentSnapshot doc;

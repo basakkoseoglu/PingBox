@@ -1,47 +1,35 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 
-
-class AuthService{
+class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-
-   Future<void> saveDeviceToken(String uid) async {
-    try {
-      String? token = await FirebaseMessaging.instance.getToken();
-      print("Device Token: $token");
-
-      if (token != null) {
-        await FirebaseFirestore.instance
-            .collection("users")
-            .doc(uid)
-            .set({
-          "deviceToken": token,
-          "updatedAt": DateTime.now(),
-        }, SetOptions(merge: true));
-      }
-    } catch (e) {
-      print("Token Kayıt Hatası: $e");
-    }
-  }
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   //kayıt ol
-  Future<User?>signUp(String email,String password) async{
-    try{
-      UserCredential userCredential=await _auth.createUserWithEmailAndPassword(email: email, password: password);
-       await saveDeviceToken(userCredential.user!.uid);
+  Future<User?> signUp(String email, String password, String username) async {
+    try {
+      UserCredential userCredential = await _auth
+          .createUserWithEmailAndPassword(email: email, password: password);
+      await _firestore.collection("users").doc(userCredential.user!.uid).set({
+        "username": username,
+        "email": email,
+        "createdAt": DateTime.now(),
+      }, SetOptions(merge: true));
+
       return userCredential.user;
-    }catch(e){
+    } catch (e) {
       print("Kayıt Hatası: $e");
       return null;
     }
   }
 
   //giriş yap
-  Future<User?> signIn(String email,String password) async {
+  Future<User?> signIn(String email, String password) async {
     try {
-      UserCredential userCredential  = await _auth.signInWithEmailAndPassword(email: email, password: password);
-       await saveDeviceToken(userCredential.user!.uid);
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
       return userCredential.user;
     } catch (e) {
       print("Giriş Hatası: $e");
@@ -53,5 +41,4 @@ class AuthService{
   Future<void> signOut() async {
     await _auth.signOut();
   }
-
 }

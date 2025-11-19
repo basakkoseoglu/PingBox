@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class PasswordSaveService {
   static const _keyEmail = "savedEmail";
   static const _keyPassword = "savedPassword";
-  static const _keyAccepted = "passwordSaveAccepted"; // 🔥 EKLENEN FLAG
+  static const _keyAccepted = "passwordSaveAccepted";
 
   static Future<void> saveLoginInfo({
     required String email,
@@ -16,14 +16,12 @@ class PasswordSaveService {
     if (password != null) {
       await prefs.setString(_keyPassword, password);
 
-      // 🔥 Şifre kaydetmeyi kabul etti → bir daha popup gösterilmesin
       await prefs.setBool(_keyAccepted, true);
     } else {
       await prefs.remove(_keyPassword);
     }
   }
 
-  /// 🔥 Popup'ı gösterip göstermeyeceğini belirlemek için
   static Future<bool> isAcceptedBefore() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getBool(_keyAccepted) ?? false;

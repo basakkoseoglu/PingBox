@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-/// Basit ve Esnek Dialog Sistemi
 class AppDialogs {
   static Future<bool?> show(
     BuildContext context, {
@@ -23,7 +22,6 @@ class AppDialogs {
   }
 }
 
-/// Modern Dialog Widget
 class _ModernDialog extends StatelessWidget {
   final String title;
   final String message;
@@ -64,7 +62,6 @@ class _ModernDialog extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Çarpı İkonu (Sağ Üst)
               Align(
                 alignment: Alignment.topRight,
                 child: InkWell(
@@ -77,8 +74,6 @@ class _ModernDialog extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 4),
-
-              // Başlık
               Text(
                 title,
                 style: theme.textTheme.titleLarge?.copyWith(
@@ -89,7 +84,6 @@ class _ModernDialog extends StatelessWidget {
               ),
               const SizedBox(height: 12),
 
-              // Mesaj
               Text(
                 message,
                 style: theme.textTheme.bodyMedium?.copyWith(
@@ -100,7 +94,6 @@ class _ModernDialog extends StatelessWidget {
               ),
               const SizedBox(height: 24),
 
-              // Butonlar
               secondaryButton != null
                   ? Row(
                       children: [

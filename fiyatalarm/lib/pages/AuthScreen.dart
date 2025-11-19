@@ -1,6 +1,6 @@
+import 'package:fiyatalarm/components/AuthScreen/LoginForm.dart';
+import 'package:fiyatalarm/components/AuthScreen/RegisterForm.dart';
 import 'package:flutter/material.dart';
-import '../components/AuthScreen/LoginForm.dart';
-import '../components/AuthScreen/RegisterForm.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
