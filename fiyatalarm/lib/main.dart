@@ -78,7 +78,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final authProvider = context.watch<UserAuthProvider>();  
 
-    // Uygulama başlarken loading göster
+    // uygulama başlarken loading göster
     if (authProvider.isInitializing) {
       return MaterialApp(
         debugShowCheckedModeBanner: false,

@@ -3,12 +3,14 @@ class UserModel {
   final String email;
   final String username;
   final String? fcmToken;
+  final String avatarPath;
 
   UserModel({
     required this.uid,
     required this.email,
     required this.username,
      this.fcmToken,
+     this.avatarPath = 'assets/avatars/avatar_default.png',
   });
 
   factory UserModel.fromMap(Map<String, dynamic> map, String uid) {
@@ -17,6 +19,7 @@ class UserModel {
       email: map['email'] ?? '',
       username: map['username'] ?? '',
       fcmToken: map['fcmToken'],
+      avatarPath: map['avatarPath'] ?? 'assets/avatars/avatar_default.png',
     );
   }
 
@@ -25,6 +28,7 @@ class UserModel {
       'email': email,
       'username': username,
       'fcmToken': fcmToken,
+      'avatarPath': avatarPath,
     };
   }
 }

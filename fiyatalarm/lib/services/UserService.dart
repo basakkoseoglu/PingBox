@@ -50,4 +50,16 @@ class UserService {
 
     return UserModel.fromMap(doc.data()!, user.uid);
   }
+
+  Future<void> updateAvatar(String avatarPath) async {
+  final user = _auth.currentUser;
+  if (user == null) return;
+
+  await _firestore.collection('users').doc(user.uid).set({
+    'avatarPath': avatarPath,
+    'updatedAt': DateTime.now(),
+  }, SetOptions(merge: true));
+
+  print("Avatar güncellendi: $avatarPath");
+}
 }

@@ -25,6 +25,7 @@ class UserAuthProvider extends ChangeNotifier {
   bool get isAuthenticated => _firebaseUser != null;
   String get username => _userModel?.username ?? 'Misafir';
   String get email => _userModel?.email ?? '';
+  String get avatarPath => _userModel?.avatarPath ?? 'assets/avatars/avatar_default.png';
 
   // ✅ Uygulama başlarken kullanıcıyı yükle
   Future<void> initialize() async {
@@ -150,6 +151,26 @@ class UserAuthProvider extends ChangeNotifier {
       return false;
     }
   }
+
+  
+  Future<bool> updateAvatar(String newAvatarPath) async {
+  _isLoading = true;
+  notifyListeners();
+
+  try {
+    await _userService.updateAvatar(newAvatarPath);
+    await _loadUserData();
+    
+    _isLoading = false;
+    notifyListeners();
+    return true;
+  } catch (e) {
+    print('Avatar güncelleme hatası: $e');
+    _isLoading = false;
+    notifyListeners();
+    return false;
+  }
+}
 }
 
 // ✅ Auth sonuç sınıfı

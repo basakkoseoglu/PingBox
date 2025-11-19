@@ -13,6 +13,7 @@ class AuthService {
       await _firestore.collection("users").doc(userCredential.user!.uid).set({
         "username": username,
         "email": email,
+        "avatarPath": "assets/avatars/avatar_default.png",
         "createdAt": DateTime.now(),
       }, SetOptions(merge: true));
 
