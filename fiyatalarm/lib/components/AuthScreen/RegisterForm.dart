@@ -116,23 +116,42 @@ class _RegisterFormState extends State<RegisterForm> {
                           username: username,
                         );
 
-                    if (result.isSuccess && mounted) {
-                      // Başarılı kayıt
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const MainScreen(),
-                        ),
-                      );
-                    } else if (mounted) {
-                      // Hata mesajı
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            result.errorMessage ?? 'Kayıt başarısız',
+                    if (result.isSuccess) {
+                      if (!mounted) return;
+
+                      try {
+                        await context.read<UserAuthProvider>().initialize();
+                      } catch (e) {
+                        if (mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                "Kullanıcı verileri yüklenemedi: $e",
+                              ),
+                            ),
+                          );
+                        }
+                        return; 
+                      }
+
+                      if (mounted) {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const MainScreen(),
                           ),
-                        ),
-                      );
+                        );
+                      }
+                    } else {
+                      if (mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              result.errorMessage ?? 'Kayıt başarısız',
+                            ),
+                          ),
+                        );
+                      }
                     }
                   },
             style: ElevatedButton.styleFrom(

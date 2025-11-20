@@ -94,7 +94,7 @@ class _LoginFormState extends State<LoginForm> {
                     final email = loginEmailController.text.trim();
                     final password = loginPasswordController.text.trim();
 
-                    // 1️⃣ Validasyon kontrolü
+                    // alan kontrol
                     if (email.isEmpty || password.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
@@ -104,17 +104,14 @@ class _LoginFormState extends State<LoginForm> {
                       return;
                     }
 
-                    // 2️⃣ Giriş işlemi
                     final result = await context
                         .read<UserAuthProvider>()
                         .signIn(email: email, password: password);
 
-                    // 3️⃣ Giriş başarılıysa
                     if (result.isSuccess && mounted) {
-                      // 4️⃣ Şifre kaydetme işlemleri
 
-                      final alreadyAccepted =
-                          await PasswordSaveService.isAcceptedBefore();
+                      final alreadyAccepted =await PasswordSaveService.isAcceptedBefore();
+
                       bool? savePass;
 
                       if (!alreadyAccepted) {
@@ -138,7 +135,7 @@ class _LoginFormState extends State<LoginForm> {
                         await PasswordSaveService.saveLoginInfo(email: email);
                       }
 
-                      // 5️⃣ Ana ekrana yönlendir
+                      // Ana ekrana yönlendir
                       if (mounted) {
                         Navigator.pushReplacement(
                           context,
@@ -146,7 +143,7 @@ class _LoginFormState extends State<LoginForm> {
                         );
                       }
                     } else if (mounted) {
-                      // 6️⃣ Giriş başarısız olursa hata göster
+                      // Giriş başarısız olursa hata göster
                       if (mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(

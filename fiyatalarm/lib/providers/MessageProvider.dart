@@ -3,8 +3,11 @@ import 'package:fiyatalarm/services/MessageService.dart';
 import 'package:flutter/material.dart';
 
 class MessageProvider extends ChangeNotifier {
+
   final MessageService _messageService = MessageService();
 
+
+  //firestordan gerçke zamanlı olarak mesajlar izlenir
   Stream<QuerySnapshot>? _upcomingMessagesStream;
   Stream<QuerySnapshot>? get upcomingMessagesStream => _upcomingMessagesStream;
 

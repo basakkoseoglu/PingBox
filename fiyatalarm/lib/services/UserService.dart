@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:fiyatalarm/Models/QuietHours.dart';
 import 'package:fiyatalarm/Models/UserModel.dart';
 
 class UserService {
@@ -61,5 +62,18 @@ class UserService {
   }, SetOptions(merge: true));
 
   print("Avatar güncellendi: $avatarPath");
+}
+
+// Sessiz saatleri güncelle
+Future<void> updateQuietHours(QuietHours quietHours) async {
+  final user = _auth.currentUser;
+  if (user == null) return;
+
+  await _firestore.collection('users').doc(user.uid).set({
+    'quietHours': quietHours.toMap(),
+    'updatedAt': DateTime.now(),
+  }, SetOptions(merge: true));
+
+  print("Sessiz saatler güncellendi: ${quietHours.getDisplayText()}");
 }
 }

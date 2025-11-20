@@ -1,9 +1,12 @@
+import 'package:fiyatalarm/Models/QuietHours.dart';
+
 class UserModel {
   final String uid;
   final String email;
   final String username;
   final String? fcmToken;
   final String avatarPath;
+  final QuietHours quietHours;
 
   UserModel({
     required this.uid,
@@ -11,6 +14,7 @@ class UserModel {
     required this.username,
      this.fcmToken,
      this.avatarPath = 'assets/avatars/avatar_default.png',
+      required this.quietHours,
   });
 
   factory UserModel.fromMap(Map<String, dynamic> map, String uid) {
@@ -20,6 +24,7 @@ class UserModel {
       username: map['username'] ?? '',
       fcmToken: map['fcmToken'],
       avatarPath: map['avatarPath'] ?? 'assets/avatars/avatar_default.png',
+      quietHours: QuietHours.fromMap(map['quietHours']),
     );
   }
 
@@ -29,6 +34,7 @@ class UserModel {
       'username': username,
       'fcmToken': fcmToken,
       'avatarPath': avatarPath,
+      'quietHours': quietHours.toMap(),
     };
   }
 }

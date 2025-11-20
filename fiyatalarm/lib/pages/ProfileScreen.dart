@@ -1,5 +1,6 @@
 import 'package:fiyatalarm/pages/AuthScreen.dart';
 import 'package:fiyatalarm/pages/NotificationPermissionScreen.dart';
+import 'package:fiyatalarm/pages/QuietHoursScreen.dart';
 import 'package:fiyatalarm/providers/UserAuthProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -106,7 +107,14 @@ class ProfileScreen extends StatelessWidget {
               context,
               icon: Icons.nights_stay_outlined,
               title: "Sessiz Saatler",
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const QuietHoursScreen(),
+                  ),
+                );
+              },
             ),
 
             _settingsTile(
