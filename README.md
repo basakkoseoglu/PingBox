@@ -70,7 +70,7 @@ sağlayan kişisel bir bildirim asistanıdır.
 <p align="center">
   <img src="./image/1.png" alt="Açılış Ekranı" width="220"/>
   <img src="./screenshots/girisyapp.png" alt="Giriş Yap" width="220"/>
-  <img src="./screenshots/kayitoll.png" alt="Kayıt Ol" width="220"/>
+  <img src="pingbox/image/1.png" alt="Kayıt Ol" />
 </p>
 
 <p align="center">
