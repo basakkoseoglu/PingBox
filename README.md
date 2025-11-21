@@ -68,7 +68,24 @@ sağlayan kişisel bir bildirim asistanıdır.
 <h2>📸 Ekran Görüntüleri</h2>
 
 <p align="center">
-  <img src="./screenshots/acilisekranii.png" alt="Açılış Ekranı" width="220"/>
+  <img src="./image/1.png" alt="Açılış Ekranı" width="220"/>
   <img src="./screenshots/girisyapp.png" alt="Giriş Yap" width="220"/>
   <img src="./screenshots/kayitoll.png" alt="Kayıt Ol" width="220"/>
 </p>
+
+<p align="center">
+  <img src="./screenshots/anasayfaa.png" alt="Ana Ekran" width="220"/>
+  <img src="./screenshots/ilanverr.png" alt="İlan Paylaş" width="220"/>
+  <img src="./screenshots/ilanlistesii.png" alt="İlan Listeleme" width="220"/>
+</p>
+
+<p align="center">
+  <img src="./screenshots/ilandetayii.png" alt="İlan Detayı" width="220"/>
+  <img src="./screenshots/sohbetlistesii.png" alt="Chat Ekranı" width="220"/>
+  <img src="./screenshots/mesajlasma.png" alt="Chat Ekranı 2" width="220"/>
+</p>
+
+<p align="center">
+  <img src="./screenshots/profilsayfasii.png" alt="Profil Ekranı" width="220"/>
+</p>
+
