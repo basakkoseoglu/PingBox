@@ -1,6 +1,7 @@
+import 'package:fiyatalarm/Modals/QuietHoursSheet.dart';
+import 'package:fiyatalarm/Modals/ThemeSheet.dart';
 import 'package:fiyatalarm/pages/AuthScreen.dart';
-import 'package:fiyatalarm/pages/NotificationPermissionScreen.dart';
-import 'package:fiyatalarm/pages/QuietHoursScreen.dart';
+import 'package:fiyatalarm/Modals/NotificationPermissionSheet.dart';
 import 'package:fiyatalarm/providers/UserAuthProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -94,12 +95,7 @@ class ProfileScreen extends StatelessWidget {
               icon: Icons.notifications_none,
               title: "Bildirim İzinleri",
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const NotificationPermissionScreen(),
-                  ),
-                );
+                NotificationPermissionSheet.show(context);
               },
             ),
 
@@ -108,12 +104,7 @@ class ProfileScreen extends StatelessWidget {
               icon: Icons.nights_stay_outlined,
               title: "Sessiz Saatler",
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const QuietHoursScreen(),
-                  ),
-                );
+                QuietHoursSheet.show(context);
               },
             ),
 
@@ -121,14 +112,16 @@ class ProfileScreen extends StatelessWidget {
               context,
               icon: Icons.color_lens_outlined,
               title: "Tema",
-              onTap: () {},
+              onTap: () {
+                 ThemeSheet.show(context);
+              },
             ),
-            _settingsTile(
-              context,
-              icon: Icons.favorite_border,
-              title: "Favori Mesajlar",
-              onTap: () {},
-            ),
+            // _settingsTile(
+            //   context,
+            //   icon: Icons.favorite_border,
+            //   title: "Favori Mesajlar",
+            //   onTap: () {},
+            // ),
 
             const SizedBox(height: 10),
 

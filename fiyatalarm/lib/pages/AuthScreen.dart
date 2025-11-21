@@ -35,9 +35,7 @@ class _AuthPageState extends State<AuthScreen> with SingleTickerProviderStateMix
           padding: EdgeInsets.only(bottom: 10),
           child: Column(
             children: [
-              SizedBox(height: 50),
-              Image.asset('assets/logo/denme.png' ,fit: BoxFit.contain,),
-              SizedBox(height: 20),
+              Image.asset('assets/logo/uygresmi.png' ,fit: BoxFit.contain,height: 200,),
 
               TabBar(
                 controller: _tabController,

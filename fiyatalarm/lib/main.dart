@@ -2,9 +2,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fiyatalarm/Models/QuietHours.dart';
 import 'package:fiyatalarm/firebase_options.dart';
 import 'package:fiyatalarm/pages/SplashScreen.dart';
 import 'package:fiyatalarm/providers/MessageProvider.dart';
+import 'package:fiyatalarm/providers/NotificationPermissionProvider.dart';
+import 'package:fiyatalarm/providers/QuietHoursProvider.dart';
+import 'package:fiyatalarm/providers/ThemeProvider.dart';
 import 'package:fiyatalarm/providers/UserAuthProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -65,6 +69,17 @@ Future<void> main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => UserAuthProvider()..initialize()), 
         ChangeNotifierProvider(create: (_) => MessageProvider()..initializeStreams()),
+         ChangeNotifierProvider(create: (_) => NotificationPermissionProvider()),
+         ChangeNotifierProvider(
+         create: (_) => QuietHoursProvider(
+          QuietHours(
+            enabled: false,
+            startTime: TimeOfDay(hour: 22, minute: 0),
+            endTime: TimeOfDay(hour: 7,   minute: 0),
+          ),
+        ),
+      ),
+      ChangeNotifierProvider(create: (_) => ThemeProvider()..loadTheme()),
       ],
       child: const MainApp(),
     ),
@@ -77,6 +92,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authProvider = context.watch<UserAuthProvider>();  
+    final themeProvider = context.watch<ThemeProvider>();
 
     // uygulama başlarken loading göster
     if (authProvider.isInitializing) {
@@ -84,7 +100,7 @@ class MainApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: AppTheme.light,
         darkTheme: AppTheme.dark,
-        themeMode: ThemeMode.system,
+        themeMode: themeProvider.themeMode,
         home: const Scaffold(
           body: Center(
             child: Column(
@@ -104,7 +120,7 @@ class MainApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
-      themeMode: ThemeMode.system,
+      themeMode: themeProvider.themeMode,
       home: const SplashScreen(),
     );
   }

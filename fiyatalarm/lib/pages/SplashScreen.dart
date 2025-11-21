@@ -20,22 +20,18 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _navigateToNextScreen() async {
-    // 2 saniye animasyon göster
     await Future.delayed(const Duration(seconds: 2));
 
     if (!mounted) return;
 
-    // UserAuthProvider'dan kullanıcı durumunu al
     final authProvider = context.read<UserAuthProvider>();
 
     if (authProvider.isAuthenticated) {
-      // Kullanıcı giriş yapmış → MainScreen
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const MainScreen()),
       );
     } else {
-      // Kullanıcı giriş yapmamış → AuthScreen
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const AuthScreen()),

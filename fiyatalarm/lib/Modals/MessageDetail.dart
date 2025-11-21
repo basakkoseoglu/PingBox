@@ -3,7 +3,6 @@ import 'package:fiyatalarm/components/Diaologs/CustomConfirmDialog.dart';
 import 'package:fiyatalarm/services/MessageService.dart';
 import 'package:flutter/material.dart';
 
-
 class MessageDetailModal extends StatelessWidget {
   final DocumentSnapshot doc;
 
@@ -137,15 +136,70 @@ class MessageDetailModal extends StatelessWidget {
 
               Row(
                 children: [
+                  // Expanded(
+                  //   child:
+                  //   _actionButton(
+                  //     context: context,
+                  //     label: "Sakla",
+                  //     icon: Icons.bookmark_outline,
+                  //     color: colorScheme.primary,
+                  //     onTap: () async {
+                  //       final data = doc.data() as Map<String, dynamic>;
+                  //       await MessageService().saveMessage(doc.id, data);
+                  //       Navigator.pop(context);
+                  //     },
+                  //   ),
+                  // ),
                   Expanded(
                     child: _actionButton(
                       context: context,
-                      label: "Sakla",
-                      icon: Icons.bookmark_outline,
-                      color: colorScheme.primary,
+                      label: "Tekrar Gönder",
+                      icon: Icons.send_rounded,
+                      color: colorScheme.secondary,
                       onTap: () async {
+                        DateTime now = DateTime.now();
+
+                        DateTime? selectedDate = await showDatePicker(
+                          context: context,
+                          initialDate: now,
+                          firstDate: now,
+                          lastDate: DateTime(2100),
+                        );
+                        if (selectedDate == null) return;
+
+                        TimeOfDay? selectedTime = await showTimePicker(
+                          context: context,
+                          initialTime: TimeOfDay.now(),
+                        );
+                        if (selectedTime == null) return;
+
+                        final newSendAt = DateTime(
+                          selectedDate.year,
+                          selectedDate.month,
+                          selectedDate.day,
+                          selectedTime.hour,
+                          selectedTime.minute,
+                        );
+
                         final data = doc.data() as Map<String, dynamic>;
-                        await MessageService().saveMessage(doc.id, data);
+
+                        await MessageService().resendMessage(
+                          title: data["title"] ?? "",
+                          content: data["content"] ?? "",
+                          newSendAt: newSendAt,
+                        );
+
+                        if (context.mounted) {
+                          await AppDialogs.show(
+                            context,
+                            title: "Bilgi",
+                            message:
+                                "Mesajınız tekrar gönderilmek üzere kaydedilmiştir..!",
+                            primaryButton: "Tamam",
+                            secondaryButton: null,
+                          );
+                        }
+
                         Navigator.pop(context);
                       },
                     ),
@@ -198,60 +252,60 @@ class MessageDetailModal extends StatelessWidget {
 
               const SizedBox(height: 12),
 
-              _actionButton(
-                context: context,
-                label: "Tekrar Gönder",
-                icon: Icons.send_rounded,
-                color: colorScheme.secondary,
-                onTap: () async {
-                  DateTime now = DateTime.now();
+              // _actionButton(
+              //   context: context,
+              //   label: "Tekrar Gönder",
+              //   icon: Icons.send_rounded,
+              //   color: colorScheme.secondary,
+              //   onTap: () async {
+              //     DateTime now = DateTime.now();
 
-                  DateTime? selectedDate = await showDatePicker(
-                    context: context,
-                    initialDate: now,
-                    firstDate: now,
-                    lastDate: DateTime(2100),
-                  );
-                  if (selectedDate == null) return;
+              //     DateTime? selectedDate = await showDatePicker(
+              //       context: context,
+              //       initialDate: now,
+              //       firstDate: now,
+              //       lastDate: DateTime(2100),
+              //     );
+              //     if (selectedDate == null) return;
 
-                  TimeOfDay? selectedTime = await showTimePicker(
-                    context: context,
-                    initialTime: TimeOfDay.now(),
-                  );
-                  if (selectedTime == null) return;
+              //     TimeOfDay? selectedTime = await showTimePicker(
+              //       context: context,
+              //       initialTime: TimeOfDay.now(),
+              //     );
+              //     if (selectedTime == null) return;
 
-                  final newSendAt = DateTime(
-                    selectedDate.year,
-                    selectedDate.month,
-                    selectedDate.day,
-                    selectedTime.hour,
-                    selectedTime.minute,
-                  );
+              //     final newSendAt = DateTime(
+              //       selectedDate.year,
+              //       selectedDate.month,
+              //       selectedDate.day,
+              //       selectedTime.hour,
+              //       selectedTime.minute,
+              //     );
 
-                  final data = doc.data() as Map<String, dynamic>;
+              //     final data = doc.data() as Map<String, dynamic>;
 
-                  await MessageService().resendMessage(
-                    title: data["title"] ?? "",
-                    content: data["content"] ?? "",
-                    newSendAt: newSendAt,
-                  );
+              //     await MessageService().resendMessage(
+              //       title: data["title"] ?? "",
+              //       content: data["content"] ?? "",
+              //       newSendAt: newSendAt,
+              //     );
 
-                  if (context.mounted) {
-                    await AppDialogs.show(
-                      context,
-                      title: "Bilgi",
-                      message: "Mesajınız tekrar gönderilmek üzere kaydedilmiştir..!",
-                      primaryButton: "Tamam",
-                      secondaryButton: null,
-                    );
-                  }
+              //     if (context.mounted) {
+              //       await AppDialogs.show(
+              //         context,
+              //         title: "Bilgi",
+              //         message: "Mesajınız tekrar gönderilmek üzere kaydedilmiştir..!",
+              //         primaryButton: "Tamam",
+              //         secondaryButton: null,
+              //       );
+              //     }
 
-                  Navigator.pop(context);
-                },
-                fullWidth: true,
-              ),
+              //     Navigator.pop(context);
+              //   },
+              //   fullWidth: true,
+              // ),
 
-              const SizedBox(height: 8),
+              // const SizedBox(height: 8),
             ],
           ),
         ),
