@@ -87,23 +87,24 @@ sağlayan kişisel bir bildirim asistanıdır.
   <img src="pingbox/image/9.png" width="220"/>
 </p>
 
-<p align="center">
-  <img src="pingbox/image/bildirii.png" width="220"/>
-  <img src="pingbox/image/bildirim.jpg" width="220"/>
-</p>
   
 <p align="center">
    <img src="pingbox/image/10.png" width="220"/>
    <img src="pingbox/image/11.png" width="220"/>
    <img src="pingbox/image/12.png" width="220"/>
-   <img src="pingbox/image/13.png" width="220"/>
+  
 </p>
 
 <p align="center">
+   <img src="pingbox/image/13.png" width="220"/>
    <img src="pingbox/image/14.png" width="220"/>
    <img src="pingbox/image/16.png" width="220"/>
-   <img src="pingbox/image/17.png" width="220"/>
-   <img src="pingbox/image/18.png" width="220"/>
 </p>
 
 
+<p align="center">
+  <img src="pingbox/image/17.png" width="220"/>
+   <img src="pingbox/image/18.png" width="220"/>
+  <img src="pingbox/image/bildirii.png" width="220"/>
+  <img src="pingbox/image/bildirim.jpg" width="220"/>
+</p>
