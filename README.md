@@ -86,7 +86,7 @@ sağlayan kişisel bir bildirim asistanıdır.
 </p>
 
 <p align="center">
-  <img src="pingbox/image/bildirim.jpg" width="220"/>
+  <img src="pingbox/image/bildirim.jpg"/>
 </p>
 
 <p align="center">
