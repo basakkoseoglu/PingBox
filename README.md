@@ -68,24 +68,38 @@ sağlayan kişisel bir bildirim asistanıdır.
 <h2>📸 Ekran Görüntüleri</h2>
 
 <p align="center">
-  <img src="./image/1.png" alt="Açılış Ekranı" width="220"/>
-  <img src="./screenshots/girisyapp.png" alt="Giriş Yap" width="220"/>
-  <img src="pingbox/image/1.png" alt="Kayıt Ol" width="220" />
+  <img src="pingbox/image/1.png" width="220"/>
+  <img src="pingbox/image/2.png"  width="220"/>
+  <img src="pingbox/image/3.png"  width="220" />
 </p>
 
 <p align="center">
-  <img src="./screenshots/anasayfaa.png" alt="Ana Ekran" width="220"/>
-  <img src="./screenshots/ilanverr.png" alt="İlan Paylaş" width="220"/>
-  <img src="./screenshots/ilanlistesii.png" alt="İlan Listeleme" width="220"/>
+  <img src="pingbox/image/4.png"  width="220"/>
+  <img src="pingbox/image/5.png"  width="220"/>
+  <img src="pingbox/image/6.png"  width="220"/>
 </p>
 
 <p align="center">
-  <img src="./screenshots/ilandetayii.png" alt="İlan Detayı" width="220"/>
-  <img src="./screenshots/sohbetlistesii.png" alt="Chat Ekranı" width="220"/>
-  <img src="./screenshots/mesajlasma.png" alt="Chat Ekranı 2" width="220"/>
+   <img src="pingbox/image/7.png" width="220"/>
+   <img src="pingbox/image/8.png" width="220"/>
+   <img src="pingbox/image/9.png" width="220"/>
 </p>
 
 <p align="center">
-  <img src="./screenshots/profilsayfasii.png" alt="Profil Ekranı" width="220"/>
+   <img src="pingbox/image/10.png" width="220"/>
+   <img src="pingbox/image/11.png" width="220"/>
+   <img src="pingbox/image/12.png" width="220"/>
+   <img src="pingbox/image/13.png" width="220"/>
+</p>
+
+<p align="center">
+   <img src="pingbox/image/14.png" width="220"/>
+   <img src="pingbox/image/16.png" width="220"/>
+   <img src="pingbox/image/17.png" width="220"/>
+   <img src="pingbox/image/18.png" width="220"/>
+</p>
+
+<p align="center">
+  <img src="pingbox/image/bildirim.jpg" width="220"/>
 </p>
 
