@@ -83,8 +83,8 @@ sağlayan kişisel bir bildirim asistanıdır.
 
 <p align="center">
   <img src="pingbox/image/9.png" width="220"/>
-  <img src="pingbox/image/bildirim.jpg" width="350"/>
-  <img src="pingbox/image/bildirii.png" width="350"/>
+   <img src="pingbox/image/bildirii.png" width="220"/>
+  <img src="pingbox/image/bildirim.jpg" width="220"/>
 </p>
 
 <p align="center">
