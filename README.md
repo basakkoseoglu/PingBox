@@ -71,21 +71,18 @@ sağlayan kişisel bir bildirim asistanıdır.
   <img src="pingbox/image/1.png" width="220"/>
   <img src="pingbox/image/2.png"  width="220"/>
   <img src="pingbox/image/3.png"  width="220" />
+   <img src="pingbox/image/4.png"  width="220"/>
 </p>
 
 <p align="center">
-  <img src="pingbox/image/4.png"  width="220"/>
   <img src="pingbox/image/5.png"  width="220"/>
   <img src="pingbox/image/6.png"  width="220"/>
+  <img src="pingbox/image/7.png" width="220"/>
+  <img src="pingbox/image/8.png" width="220"/>
 </p>
 
 <p align="center">
-   <img src="pingbox/image/7.png" width="220"/>
-   <img src="pingbox/image/8.png" width="220"/>
-   <img src="pingbox/image/9.png" width="220"/>
-</p>
-
-<p align="center">
+  <img src="pingbox/image/9.png" width="220"/>
   <img src="pingbox/image/bildirim.jpg" width="350"/>
   <img src="pingbox/image/bildirii.png" width="350"/>
 </p>
