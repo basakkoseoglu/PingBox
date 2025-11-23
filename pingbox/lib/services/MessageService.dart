@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:pingbox/services/AIService.dart';
 
 class MessageService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -23,6 +24,10 @@ class MessageService {
         "createdAt": Timestamp.now(),
         "delivered": false,
       });
+
+   
+      await AIService().analyzeUserPatternsOnMessage(content);
+      
       print("Mesaj başarıyla kaydedildi.");
     } catch (e) {
       print("Mesaj ekleme hatası: $e");

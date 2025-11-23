@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pingbox/components/Diaologs/CustomConfirmDialog.dart';
 import 'package:pingbox/pages/MainScreen.dart';
 import 'package:pingbox/providers/UserAuthProvider.dart';
@@ -43,7 +44,7 @@ class _LoginFormState extends State<LoginForm> {
             controller: loginEmailController,
             decoration: InputDecoration(
               labelText: "E-mail",
-              prefixIcon: Icon(Icons.person, color: scheme.primary),
+              prefixIcon: Icon(FontAwesomeIcons.at, color: scheme.primary),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
