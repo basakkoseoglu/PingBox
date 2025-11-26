@@ -33,7 +33,7 @@ PingBox, gün içinde sana özel hatırlatmalar üretir:
 - Günün koç mesajı
 - Planlı AI hatırlatması
 
-###💡 AI Öneri Sistemi
+### 💡 AI Öneri Sistemi
 Kullanım alışkanlıklarına göre otomatik öneriler sunar:
 - “Bugün uzun süre aktiftin, biraz mola iyi gelebilir.”
 - “Plan yoğun görünüyor. Küçük bir nefes egzersizi deneyebilirsin.”
