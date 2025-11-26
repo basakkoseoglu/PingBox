@@ -7,7 +7,6 @@ import 'package:pingbox/providers/UserAuthProvider.dart';
 import 'package:pingbox/services/AuthService.dart';
 import 'package:provider/provider.dart';
 
-
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
@@ -53,8 +52,13 @@ class ProfileScreen extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         radius: 55,
-                        backgroundImage: AssetImage(authProvider.avatarPath),
+                        backgroundImage:
+                            authProvider.avatarPath.startsWith('http')
+                            ? NetworkImage(authProvider.avatarPath)
+                            : AssetImage(authProvider.avatarPath)
+                                  as ImageProvider,
                       ),
+
                       Positioned(
                         bottom: 0,
                         right: 0,
@@ -113,16 +117,16 @@ class ProfileScreen extends StatelessWidget {
               icon: Icons.color_lens_outlined,
               title: "Tema",
               onTap: () {
-                 ThemeSheet.show(context);
+                ThemeSheet.show(context);
               },
             ),
+
             // _settingsTile(
             //   context,
             //   icon: Icons.favorite_border,
             //   title: "Favori Mesajlar",
             //   onTap: () {},
             // ),
-
             const SizedBox(height: 10),
 
             ListTile(

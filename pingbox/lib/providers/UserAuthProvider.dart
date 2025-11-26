@@ -119,6 +119,21 @@ class UserAuthProvider extends ChangeNotifier {
     }
   }
 
+//googleilelogibn
+Future<void> setUserFromFirebase(User firebaseUser, {bool isGoogle = false}) async {
+  _firebaseUser = firebaseUser;
+
+  if (isGoogle) {
+    await _userService.saveGoogleUser(firebaseUser);
+  }
+
+  await _loadUserData();
+  await _userService.updateFcmToken();
+
+  notifyListeners();
+}
+
+  
   // Çıkış yap
   Future<void> signOut() async {
     _isLoading = true;

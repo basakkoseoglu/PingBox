@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pingbox/components/Diaologs/CustomConfirmDialog.dart';
 import 'package:pingbox/pages/MainScreen.dart';
 import 'package:pingbox/providers/UserAuthProvider.dart';
+import 'package:pingbox/services/AuthService.dart';
 import 'package:pingbox/services/PasswordSaveService.dart';
 import 'package:pingbox/theme/AppColors.dart';
 import 'package:provider/provider.dart';
@@ -35,6 +36,7 @@ class _LoginFormState extends State<LoginForm> {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     final authProvider = context.watch<UserAuthProvider>();
+    final googleService = AuthService();
 
     return Padding(
       padding: const EdgeInsets.all(20),
@@ -110,8 +112,8 @@ class _LoginFormState extends State<LoginForm> {
                         .signIn(email: email, password: password);
 
                     if (result.isSuccess && mounted) {
-
-                      final alreadyAccepted =await PasswordSaveService.isAcceptedBefore();
+                      final alreadyAccepted =
+                          await PasswordSaveService.isAcceptedBefore();
 
                       bool? savePass;
 
@@ -164,6 +166,69 @@ class _LoginFormState extends State<LoginForm> {
             child: authProvider.isLoading
                 ? const CircularProgressIndicator(color: Colors.white)
                 : const Text("Giriş Yap", style: TextStyle(fontSize: 18)),
+          ),
+          const SizedBox(height: 18),
+
+          Row(
+            children: [
+              Expanded(
+                child: Divider(
+                  thickness: 1,
+                  color: Colors.grey.withOpacity(0.5),
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8.0),
+                child: Text(
+                  "veya",
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Divider(
+                  thickness: 1,
+                  color: Colors.grey.withOpacity(0.5),
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 18),
+
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              icon: Image.asset(
+                "assets/logo/googlelogo.png",
+                width: 24,
+                height: 24,
+              ),
+              label: const Text(
+                "Google ile Giriş Yap",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              ),
+              style: OutlinedButton.styleFrom(
+                minimumSize: const Size(double.infinity, 50),
+                side: BorderSide(color: scheme.primary.withOpacity(0.5)),
+                foregroundColor: scheme.primary,
+              ),
+              onPressed: () async {
+                final user = await googleService.signInWithGoogle();
+                if (user != null) {
+                  await authProvider.setUserFromFirebase(user, isGoogle: true);
+
+                  if (context.mounted) {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (_) => const MainScreen()),
+                    );
+                  }
+                }
+              },
+            ),
           ),
         ],
       ),

@@ -12,7 +12,20 @@
           "package_name": "com.example.fiyatalarm"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "748924248614-sfgsijrt957hpnt85fnm6cemn9l6sgns.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.fiyatalarm",
+            "certificate_hash": "66fa582a02131cedc92a5514e7a311f1977112f8"
+          }
+        },
+        {
+          "client_id": "748924248614-jkva295jkbnhhscn9ufn3544hhoqkdle.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyApYqTfxneVcRMBNZ8_MmGcjcLpR2zXLMQ"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "748924248614-jkva295jkbnhhscn9ufn3544hhoqkdle.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
