@@ -117,13 +117,13 @@ sağlayan kişisel bir bildirim asistanıdır.
 </p>
 
 <p align="center">
-   <img src="pingbox/image/ai1.png"  width="220"/>
-  <img src="pingbox/image/ai2.png"  width="220"/>
   <img src="pingbox/image/4.png" width="220"/>
+   <img src="pingbox/image/5.png"  width="220"/>
+   <img src="pingbox/image/ai1.png"  width="220"/>
 </p>
 
 <p align="center">
-   <img src="pingbox/image/5.png"  width="220"/>
+   <img src="pingbox/image/ai2.png"  width="220"/>
   <img src="pingbox/image/6.png"  width="220"/>
   <img src="pingbox/image/7.png" width="220"/>
 </p>
