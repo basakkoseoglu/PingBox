@@ -119,32 +119,30 @@ sağlayan kişisel bir bildirim asistanıdır.
 <p align="center">
    <img src="pingbox/image/ai1.png"  width="220"/>
   <img src="pingbox/image/ai2.png"  width="220"/>
-  <img src="pingbox/image/ai3.png"  width="220"/>
+  <img src="pingbox/image/7.png" width="220"/>
 
 </p>
 
 <p align="center">
-  <img src="pingbox/image/7.png" width="220"/>
   <img src="pingbox/image/8.png" width="220"/>
   <img src="pingbox/image/9.png" width="220"/>
+  <img src="pingbox/image/7.png" width="220"/>
 </p>
 
 <p align="center">
-  <img src="pingbox/image/7.png" width="220"/>
   <img src="pingbox/image/8.png" width="220"/>
   <img src="pingbox/image/9.png" width="220"/>
+  <img src="pingbox/image/10.png" width="220"/>
 </p>
 
   
 <p align="center">
-   <img src="pingbox/image/10.png" width="220"/>
    <img src="pingbox/image/dgiris.png" width="220"/>
    <img src="pingbox/image/dkayit.png" width="220"/>
-  
-</p>
-pingbox/image/ai3.png
-<p align="center">
    <img src="pingbox/image/13.png" width="220"/>
+</p>
+
+<p align="center">
    <img src="pingbox/image/14.png" width="220"/>
    <img src="pingbox/image/16.png" width="220"/>
    <img src="pingbox/image/17.png" width="220"/>
