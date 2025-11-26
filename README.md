@@ -126,12 +126,6 @@ sağlayan kişisel bir bildirim asistanıdır.
 <p align="center">
   <img src="pingbox/image/8.png" width="220"/>
   <img src="pingbox/image/9.png" width="220"/>
-  <img src="pingbox/image/7.png" width="220"/>
-</p>
-
-<p align="center">
-  <img src="pingbox/image/8.png" width="220"/>
-  <img src="pingbox/image/9.png" width="220"/>
   <img src="pingbox/image/10.png" width="220"/>
 </p>
 
