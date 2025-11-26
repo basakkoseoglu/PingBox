@@ -1,7 +1,18 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:pingbox/components/AI/AIAnalyticsRow.dart';
+import 'package:pingbox/components/AI/AIAutoSuggestionCard.dart';
+import 'package:pingbox/components/AI/AIHomeHeader.dart';
+import 'package:pingbox/components/AI/CoachModeCard.dart';
+import 'package:pingbox/components/AI/Shimmers/AIHomeShimmer.dart';
+import 'package:pingbox/components/AI/TodayReminderCard.dart';
+import 'package:pingbox/components/AI/TodayScheduledCard.dart';
 import 'package:pingbox/providers/UserAuthProvider.dart';
-import 'package:pingbox/services/GeminiService.dart';
-import 'package:pingbox/services/MessageAnalysisService.dart';
+import 'package:pingbox/services/AI/AutoCoachRemindersService.dart';
+import 'package:pingbox/services/AI/AutoSuggestionsService.dart';
+import 'package:pingbox/services/AI/CoachModesService.dart';
+import 'package:pingbox/services/AI/ScheduledCoachRemindersService.dart';
+import 'package:pingbox/services/AI/UserPatternsService.dart';
 import 'package:provider/provider.dart';
 
 class AIHomeScreen extends StatefulWidget {
@@ -12,49 +23,131 @@ class AIHomeScreen extends StatefulWidget {
 }
 
 class _AIHomeScreenState extends State<AIHomeScreen> {
+  bool isLoading = true;
+
+
+  String activeHour = "-";
+  String topCategory = "-";
+  String mood = "-";
+
+  String coachMode = "-";
+  String coachReason = "-";
+
+  String todayReminderText = "";
+
+  String todayScheduledReminder = "";
+  String todayScheduledTime = "";
+
   List<Map<String, String>> suggestions = [];
-  bool isLoading = false;
 
-  Future<void> generateTodayAdvice() async {
-    setState(() => isLoading = true);
+  String formatHour(dynamic raw) {
+    if (raw == null) return "-";
 
-    final gemini = GeminiService(
-      apiKey: "<your_api_key>",
-    );
+    try {
+      final hour = int.parse(raw.toString());
+      return "${hour.toString().padLeft(2, '0')}:00";
+    } catch (_) {
+      return raw.toString();
+    }
+  }
 
-    final advice = await gemini.generateAdvice();
+  String formatCategory(String raw) {
+    if (raw.isEmpty) return "-";
 
+    final map = {
+      "water": "Su",
+      "health": "Sağlık",
+      "project": "Proje",
+      "shopping": "Alışveriş",
+      "family": "Aile",
+      "reminder": "Hatırlatma",
+      "focus": "Odak",
+      "note": "Not",
+      "exercise": "Spor",
+      "food": "Beslenme",
+      "planning": "Plan",
+    };
+
+    final lower = raw.toLowerCase();
+    return map[lower] ?? lower.capitalize();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration(milliseconds: 500), () {
+      if (mounted) { 
+        loadBackendData();
+      }
+  });
+  }
+
+  Future<void> loadBackendData() async {
+    final userPatternsService = UserPatternsService();
+    final coachModesService = CoachModesService();
+    final suggestionsService = AutoSuggestionsService();
+
+    //userpatterns
+    final patterns = await userPatternsService.getUserPatterns();
+     if (patterns != null && mounted) {
+      setState(() {
+        activeHour = formatHour(patterns["mostActiveHour"]);
+        topCategory = formatCategory(patterns["mostUsedCategory"] ?? "-");
+
+        final moodAvg = patterns["moodAverage"] ?? 0;
+        mood = moodAvg >= 0.3
+            ? "Pozitif"
+            : moodAvg <= -0.3
+            ? "Negatif"
+            : "Nötr";
+      });
+    }
+
+    //coachmode
+    final modeData = await coachModesService.getTodayCoachMode();
+    if (modeData != null && mounted) {
+      setState(() {
+        coachMode = (modeData["mode"] ?? "focus").toString().toUpperCase();
+        coachReason = modeData["reason"] ?? "";
+      });
+    }
+
+    final backendSuggestions = await suggestionsService.getTodaySuggestions();
+      if (mounted){
     setState(() {
-      suggestions.insert(0, {"title": "AI Önerisi", "desc": advice});
+      for (final s in backendSuggestions) {
+        suggestions.add({
+          "title": s["title"] ?? "AI Önerisi",
+          "desc": s["content"] ?? "",
+        });
+      }
       isLoading = false;
     });
+      }
+
+    final remindersService = AutoCoachRemindersService();
+    final todayReminder = await remindersService.getTodayReminder();
+
+    if (todayReminder != null && mounted) {
+      setState(() {
+        todayReminderText = todayReminder;
+      });
+    }
+
+    final scheduledService = ScheduledCoachRemindersService();
+    final scheduledData = await scheduledService.getTodayScheduled();
+
+    if (scheduledData != null && mounted) {
+      final dt = (scheduledData["runAt"] as Timestamp).toDate();
+      final formattedTime =
+          "${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}";
+
+      setState(() {
+        todayScheduledReminder = scheduledData["reminder"] ?? "";
+        todayScheduledTime = formattedTime;
+      });
+    }
   }
-  Future<void> analyzeUserMessages() async {
-  setState(() => isLoading = true);
-
-  final messageService = MessageAnalysisService();
-  final gemini = GeminiService(apiKey: "your_api_key");
-
-  final messages = await messageService.getUserMessages();
-
-  final analysis = await gemini.analyzeMessages(messages);
-
-  setState(() {
-    suggestions.insert(0, {
-      "title": "Mesaj Analizi Sonucu",
-      "desc": """
-Ruh hali: ${analysis["ruh_hali"]}
-Kategori: ${analysis["en_sik_kategori"]}
-Aktif saat: ${analysis["aktif_saat"]}
-
-Yorum: ${analysis["yorum"]}
-"""
-    });
-
-    isLoading = false;
-  });
-}
-
 
   @override
   Widget build(BuildContext context) {
@@ -64,30 +157,38 @@ Yorum: ${analysis["yorum"]}
     return Scaffold(
       backgroundColor: scheme.surface,
       body: SafeArea(
-        child: SingleChildScrollView(
+         child: isLoading
+        ? const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: AIHomeShimmer(),
+          )
+        : SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                "Merhaba ${authProvider.username} 👋",
-                style: TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.bold,
-                  color: scheme.onSurface,
-                ),
+              AIHomeHeader(
+                username: authProvider.username,
+                avatarUrl: authProvider.avatarPath,
               ),
-              const SizedBox(height: 4),
-              Text(
-                "Bugünkü AI Koçun hazır.",
-                style: TextStyle(
-                  fontSize: 16,
-                  color: scheme.onSurface.withOpacity(0.7),
-                ),
-              ),
+              const SizedBox(height: 24),
+              CoachModeCard(mode: coachMode, reason: coachReason),
 
               const SizedBox(height: 24),
-              _buildTodayModeCard(context),
+              if (todayReminderText.isNotEmpty)
+                TodayReminderCard(
+                  reminderText: todayReminderText,
+                  mode: coachMode,
+                ),
+
+              const SizedBox(height: 24),
+              if (todayScheduledReminder.isNotEmpty)
+                TodayScheduledCard(
+                  reminderText: todayScheduledReminder,
+                  time: todayScheduledTime,
+                  mode: coachMode,
+                ),
+
               const SizedBox(height: 24),
 
               Text(
@@ -100,12 +201,16 @@ Yorum: ${analysis["yorum"]}
               ),
               const SizedBox(height: 12),
 
-              _buildAnalyticsHorizontalScroll(context),
+              AIAnalyticsRow(
+                activeHour: activeHour,
+                topCategory: topCategory,
+                mood: mood,
+              ),
 
               const SizedBox(height: 24),
 
               Text(
-                "Otomatik Öneriler",
+                "Bugünün AI Önerileri",
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.w600,
@@ -119,52 +224,17 @@ Yorum: ${analysis["yorum"]}
                     .map(
                       (s) => Padding(
                         padding: const EdgeInsets.only(bottom: 12),
-                        child: _buildSuggestionCard(
-                          context,
-                          title: s['title']!,
-                          desc: s['desc']!,
+                        child: AIAutoSuggestionCard(
+                          title: s['title']?.toString() ?? "AI Önerisi",
+                          desc:
+                              s['desc']?.toString() ??
+                              "Bugün için öneri bulunamadı.",
+                          mode: coachMode,
                         ),
                       ),
                     )
                     .toList(),
               ),
-
-              const SizedBox(height: 16),
-
-              FilledButton(
-                onPressed: isLoading ? null : generateTodayAdvice,
-
-                style: FilledButton.styleFrom(
-                  minimumSize: const Size(double.infinity, 54),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                ),
-                child: isLoading
-                    ? const CircularProgressIndicator(color: Colors.white)
-                    : const Text(
-                        "Bugün için öneri üret",
-                        style: TextStyle(fontSize: 18),
-                      ),
-              ),
-
-              const SizedBox(height: 12),
-
-              OutlinedButton(
-                onPressed: isLoading ? null : analyzeUserMessages,
-                style: OutlinedButton.styleFrom(
-                  minimumSize: const Size(double.infinity, 54),
-                  side: BorderSide(color: scheme.primary),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                ),
-                child: const Text(
-                  "Mesajlarını analiz et",
-                  style: TextStyle(fontSize: 18),
-                ),
-              ),
-
               const SizedBox(height: 40),
             ],
           ),
@@ -172,168 +242,11 @@ Yorum: ${analysis["yorum"]}
       ),
     );
   }
+}
 
-  Widget _buildTodayModeCard(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            scheme.primary.withOpacity(0.8),
-            scheme.primary.withOpacity(0.6),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "Bugünkü Modun",
-            style: TextStyle(
-              color: scheme.onPrimary,
-              fontSize: 16,
-              fontWeight: FontWeight.w300,
-            ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            "Focus",
-            style: TextStyle(
-              color: scheme.onPrimary,
-              fontSize: 28,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            "Zihnin bugün net. Bu modu kullanmak için 30 dakikalık bir hedef belirleyebilirsin.",
-            style: TextStyle(
-              color: scheme.onPrimary.withOpacity(0.9),
-              fontSize: 15,
-              height: 1.3,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildAnalyticsHorizontalScroll(BuildContext context) {
-    return SizedBox(
-      height: 140,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        children: [
-          _buildMiniCard(
-            context,
-            title: "En aktif saat",
-            value: "22:00",
-            icon: Icons.access_time,
-          ),
-          const SizedBox(width: 12),
-          _buildMiniCard(
-            context,
-            title: "Kategori",
-            value: "Hatırlatma",
-            icon: Icons.category,
-          ),
-          const SizedBox(width: 12),
-          _buildMiniCard(
-            context,
-            title: "Ruh hali",
-            value: "Pozitif",
-            icon: Icons.favorite,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMiniCard(
-    BuildContext context, {
-    required String title,
-    required String value,
-    required IconData icon,
-  }) {
-    final scheme = Theme.of(context).colorScheme;
-
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: scheme.surfaceVariant.withOpacity(0.5),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(icon, size: 26, color: scheme.primary),
-          const SizedBox(height: 10),
-          Text(
-            title,
-            style: TextStyle(
-              color: scheme.onSurface.withOpacity(0.7),
-              fontSize: 14,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            value,
-            style: TextStyle(
-              color: scheme.onSurface,
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSuggestionCard(
-    BuildContext context, {
-    required String title,
-    required String desc,
-  }) {
-    final scheme = Theme.of(context).colorScheme;
-
-    return Container(
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: scheme.surfaceVariant.withOpacity(0.5),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: TextStyle(
-              color: scheme.onSurface,
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            desc
-                .replaceAll('*', '')
-                .replaceAll('_', '')
-                .replaceAll('#', '')
-                .replaceAll('•', ''),
-
-            style: TextStyle(
-              color: scheme.onSurface.withOpacity(0.7),
-              fontSize: 15,
-            ),
-          ),
-        ],
-      ),
-    );
+extension CapExtension on String {
+  String capitalize() {
+    if (isEmpty) return this;
+    return "${this[0].toUpperCase()}${substring(1)}";
   }
 }

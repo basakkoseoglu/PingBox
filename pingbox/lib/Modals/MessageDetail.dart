@@ -319,7 +319,6 @@ class MessageDetailModal extends StatelessWidget {
     required IconData icon,
     required Color color,
     required VoidCallback onTap,
-    bool fullWidth = false,
   }) {
     return InkWell(
       onTap: onTap,

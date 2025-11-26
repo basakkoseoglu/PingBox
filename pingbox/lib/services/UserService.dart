@@ -77,4 +77,19 @@ Future<void> updateQuietHours(QuietHours quietHours) async {
 
   print("Sessiz saatler güncellendi: ${quietHours.getDisplayText()}");
 }
+
+Future<void> saveGoogleUser(User user) async {
+  await _firestore.collection("users").doc(user.uid).set({
+    "email": user.email,
+    "username": user.displayName ?? "Kullanıcı",
+    "avatarPath": user.photoURL ?? "assets/avatars/avatar_default.png",
+    "quietHours": {
+      "start": null,
+      "end": null,
+      "isActive": false,
+    },
+    "createdAt": FieldValue.serverTimestamp(),
+  }, SetOptions(merge: true));
+}
+
 }
