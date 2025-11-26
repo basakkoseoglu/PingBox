@@ -1,14 +1,45 @@
-<h1 align="center">⏳⏱️ PingBox – Akıllı Mesaj Zamanlama & Bildirim Yönetimi</h1>
+<h1 align="center">⏳⏱️ PingBox – Akıllı Mesajlama, Bildirim & Kişisel Asistan</h1>
 
 <p align="center">
-  <b>PingBox</b>,kullanıcıların ileri tarihe <b> mesaj planlayabildiği </b>, <b> bildirim alabileceği </b>,<b> sessiz saatler tanımlayabileceği </b> ve kişisel iletişim yönetimini kolaylaştıran modern bir mobil uygulamadır.<br>
+  <b>PingBox</b>,kullanıcıların ileri tarihe <b> mesaj planlayabildiği </b>, <b> bildirim alabileceği </b>,<b> sessiz saatler tanımlayabileceği </b> kullanıcı davranışı analizi ve <b> AI destekli öneri sistemi </b> sunan modern bir kişisel iletişim asistanıdır..<br>
   Flutter ile geliştirilmiş olup Firebase altyapısı kullanır. Gerçek zamanlı mesaj senkronizasyonu ve otomatik gönderim sistemiyle tamamen kullanıcı dostu bir deneyim sunar.
 </p>
 
 ---
-<h2>🚀 Özellikler</h2>
+<h2>✨ Öne Çıkan Özellikler</h2>
 
-📨 <b> Mesaj Zamanlama </b> 
+
+## 🧠 AI Destekli Kişisel Asistan
+PingBox, kullanıcı davranışlarını analiz ederek tamamen kişiye özel bir koçluk deneyimi sunar.
+
+###⚡ AI Modları
+Sistem günlük olarak bir koç modu belirler:
+- Focus – Odaklanmanı artırır
+- Relax – Sakinleştirir
+- Energy Boost – Enerjiyi yükseltir
+- Mood Support – Duygusal denge önerileri
+- Health – Sağlık odaklı tavsiyeler
+Uygulamanın renk paleti günlük moda göre dinamik olarak güncellenir.
+
+### 📊 AI Analiz Kartları
+Kullanıcı davranışlarından çıkan sonuçlar:
+- En aktif olduğun saat
+- En sık kullandığın kategori
+- Günlük ruh hali tahmini
+Analizler modern kart tasarımı ile sunulur.
+
+### 📩 AI Hatırlatmaları
+PingBox, gün içinde sana özel hatırlatmalar üretir:
+- Günün koç mesajı
+- Planlı AI hatırlatması
+
+###💡 AI Öneri Sistemi
+Kullanım alışkanlıklarına göre otomatik öneriler sunar:
+- “Bugün uzun süre aktiftin, biraz mola iyi gelebilir.”
+- “Plan yoğun görünüyor. Küçük bir nefes egzersizi deneyebilirsin.”
+- “Düşük ruh hali tespit edildi, minik bir yürüyüş ekleyebilirsin.”
+
+### 📨 Mesaj Zamanlama
 - Kullanıcı mesaj oluşturur ve istediği tarih/saat için planlar.
 - Mesajlar zamanı geldiğinde otomatik olarak push bildirim olarak gönderilir.
 - Mesaj düzenleme, silme ve yeniden planlama desteklenir.
@@ -32,6 +63,16 @@
 - Kullanıcıya özel FCM token saklama
 - Sessiz saat bilgilerinin kullanıcıya bağlı olması
 
+### 🔐 Google ile Giriş
+PingBox hızlı giriş için Google Sign-In desteği sunar.
+- Tek tıkla Google hesabıyla giriş
+- Firebase Auth ile tam entegrasyon
+- Profil verileri otomatik alınır
+- Kullanıcı Firestore’a otomatik kaydedilir
+- Profil fotoğrafı Google’dan çekilir
+- FCM token otomatik saklanır
+Bu sayede kullanıcı kayıt süreci hızlı ve zahmetsizdir.
+
 ### 🗂 Gerçek Zamanlı Veri Yönetimi 
 - Firestore ile tüm veriler anlık senkronize edilir
 - StreamBuilder ile anlık mesaj listesi
@@ -46,11 +87,12 @@
 ---
 <h2>🎯 Uygulamanın Amacı</h2>
 
-- PingBox, kullanıcıların:
-- Önemli hatırlatmaları kaçırmamasını,
-- Mesajları planlayıp otomatik bildirim almasını,
-- Rahatsız edilmek istemediği saatleri kontrol etmesini,
-- Tüm bunları basit, hızlı ve güvenli bir arayüzle yapmasını
+PingBox, kullanıcıların:
+- Hayatını planlamasını
+- Bildirimleri kişiselleştirmesini
+- Rahatsız edilmek istemediği anları yönetmesini
+- AI ile optimize edilmiş bir gün geçirmesini
+- Kendi davranışlarını daha iyi anlamasını
 sağlayan kişisel bir bildirim asistanıdır.
 
 ---
