@@ -12,7 +12,7 @@
 ## 🧠 AI Destekli Kişisel Asistan
 PingBox, kullanıcı davranışlarını analiz ederek tamamen kişiye özel bir koçluk deneyimi sunar.
 
-###⚡ AI Modları
+### ⚡ AI Modları
 Sistem günlük olarak bir koç modu belirler:
 - Focus – Odaklanmanı artırır
 - Relax – Sakinleştirir
